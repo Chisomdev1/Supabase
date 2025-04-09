@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from "../utils/supabase";
+import { supabase } from "./utils/Supabase";
 
 export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('')

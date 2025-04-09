@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../utils/supabase";
+import { supabase } from "./utils/Supabase";
 import Link from "next/link";
 
-export default function Home() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -84,7 +84,7 @@ export default function Home() {
 
           <button onClick={handleGoogleSignIn} className="bg-black text-white w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline">Sign in with Google</button>
           <p className="text-center">
-            Don't have an account{" "}
+             Don&apos;t have an account{" "}
             <Link className="text-blue-500" href={"/"}>
               create
             </Link>{" "}

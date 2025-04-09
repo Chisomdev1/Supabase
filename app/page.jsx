@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React from "react";
 import { useState } from "react";
-import { supabase } from "./utils/supabase";
+import { supabase } from "../utils/Supabase";
 
 const login = () => {
   const [username, setUsername] = useState("");
