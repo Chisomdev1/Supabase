@@ -5,18 +5,57 @@ import { useState } from "react";
 import { supabase } from "./utils/supabase";
 
 const login = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-    if (error) setMessage(error.message);
-    else setMessage("Check your email for confirmation!");
+
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match");
+      return;
+    }
+
+    // Check if email is already registered
+    const { data: existingUsers, error: emailCheckError } = await supabase
+      .from("auth.users")
+      .select("email")
+      .eq("email", email);
+
+    if (emailCheckError) {
+      console.error("Error checking email:", emailCheckError);
+    } else if (existingUsers.length > 0) {
+      setMessage("User already exists");
+      return;
+    }
+
+    // Sign up the user
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp(
+      {
+        email,
+        password,
+      }
+    );
+
+    if (signUpError) {
+      setMessage(signUpError.message);
+    } else {
+      const userId = signUpData.user.id;
+
+      // Save username in profiles table
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert([{ id: userId, username }]);
+
+      if (profileError) {
+        setMessage("Signup successful, but failed to save username");
+      } else {
+        setMessage("Registered successfully! Check your email to confirm.");
+      }
+    }
   };
 
   return (
@@ -40,7 +79,8 @@ const login = () => {
               type="text"
               id="username"
               name="username"
-              
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -73,6 +113,8 @@ const login = () => {
               type="password"
               id="password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -86,10 +128,11 @@ const login = () => {
             </label>
             <input
               type="password"
-              id="cmpassword"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="confirmpassword"
+              name="confirmpassword"
+              
+              value={confirmPassword}
+          onChange={e => setConfirmPassword(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />

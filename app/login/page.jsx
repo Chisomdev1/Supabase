@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../utils/supabase"
+import { supabase } from "../utils/supabase";
 import Link from "next/link";
 
 export default function Home() {
@@ -24,10 +24,10 @@ export default function Home() {
     <>
       <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
         <h1 className="text-3xl font-bold mb-4">Login</h1>
-        <form className="w-full max-w-sm bg-white p-6 rounded shadow-md">
+        <form className="w-full max-w-sm bg-white p-6 rounded shadow-md" onSubmit={handleLogin}>
           <div className="mb-4">
           <p className="text-center">{message}</p>
-          
+
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="username"
