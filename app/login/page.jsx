@@ -20,19 +20,34 @@ export default function Home() {
     else router.push("/dashboard");
   };
 
+  const handleGoogleSignIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "http://localhost:3000/dashboard",
+      },
+    });
+
+    if (error) {
+      console.error("Google sign-in error:", error.message);
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
         <h1 className="text-3xl font-bold mb-4">Login</h1>
-        <form className="w-full max-w-sm bg-white p-6 rounded shadow-md" onSubmit={handleLogin}>
+        <form
+          className="w-full max-w-sm bg-white p-6 rounded shadow-md"
+          onSubmit={handleLogin}
+        >
           <div className="mb-4">
-          <p className="text-center">{message}</p>
+            <p className="text-center">{message}</p>
 
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="username"
-            >
-            </label>
+            ></label>
             <input
               type="text"
               placeholder="Enter your Email"
@@ -62,10 +77,12 @@ export default function Home() {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-3"
           >
             Login
           </button>
+
+          <button onClick={handleGoogleSignIn} className="bg-black text-white w-full py-2 px-4 rounded focus:outline-none focus:shadow-outline">Sign in with Google</button>
           <p className="text-center">
             Don't have an account{" "}
             <Link className="text-blue-500" href={"/"}>
